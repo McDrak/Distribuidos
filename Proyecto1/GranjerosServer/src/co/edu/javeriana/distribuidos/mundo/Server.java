@@ -7,17 +7,29 @@ import java.net.Socket;
 public class Server {
 
 	public static void main(String[] args) {
+		int serverPort = 7896;
+		ServerBackend backend = new ServerBackend();
+		ServerSocket listenSocket = null;
+		
 		try {
-			int serverPort = 7896;
-			ServerSocket listenSocket = new ServerSocket( serverPort );
+			listenSocket = new ServerSocket( serverPort );
 			
 			while( true ) {
 				Socket clientSocket = listenSocket.accept( );
-				Connection c = new Connection( clientSocket );
+				ConnectionThread c = new ConnectionThread( clientSocket, backend );
+				c.start();
 			}
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
+		}
+		finally {
+			try {
+				listenSocket.close();
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
