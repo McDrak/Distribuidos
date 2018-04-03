@@ -1,6 +1,10 @@
 package co.edu.javeriana.distribuidos.mundo;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,14 +15,21 @@ import javax.swing.JTextField;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 
 public class ClientGUI extends JFrame {
-
 	private static final long serialVersionUID = 1L;
 	
+	private Client client;
+	
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField txtUb;
+	private JTextField txtProd;
+	private JTextPane messagesPane;
+	private JButton btnRegistrarse;
+	private JButton btnSuscribirse;
+	private JComboBox<String> comboTam;
+	private JTextField txtIp;
 
 	/**
 	 * Launch the application.
@@ -40,6 +51,7 @@ public class ClientGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public ClientGUI() {
+		client = new Client( this );
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 536, 488);
 		contentPane = new JPanel();
@@ -68,53 +80,94 @@ public class ClientGUI extends JFrame {
 		lblTamao.setBounds(20, 150, 46, 14);
 		panel.add(lblTamao);
 		
-		JComboBox<String> comboBox = new JComboBox<String>();
-		comboBox.setBounds(103, 147, 86, 20);
-		panel.add(comboBox);
-		comboBox.addItem("Grande");
-		comboBox.addItem("Mediano");
-		comboBox.addItem("PequeÃ±o");
+		comboTam = new JComboBox<String>();
+		comboTam.setBounds(103, 147, 86, 20);
+		panel.add(comboTam);
+		comboTam.addItem("Grande");
+		comboTam.addItem("Mediano");
+		comboTam.addItem("Pequeño");
 		
-		textField = new JTextField();
-		textField.setBounds(103, 69, 86, 20);
-		panel.add(textField);
-		textField.setColumns(10);
+		txtUb = new JTextField();
+		txtUb.setBounds(103, 69, 86, 20);
+		panel.add(txtUb);
+		txtUb.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(103, 107, 86, 20);
-		panel.add(textField_1);
-		textField_1.setColumns(10);
+		txtProd = new JTextField();
+		txtProd.setBounds(103, 107, 86, 20);
+		panel.add(txtProd);
+		txtProd.setColumns(10);
 		
 		JLabel lblTemas = new JLabel("T\u00F3picos");
-		lblTemas.setBounds(20, 247, 46, 14);
+		lblTemas.setBounds(20, 290, 46, 14);
 		panel.add(lblTemas);
 		
-		JCheckBox chckbxPrediccinClimatica = new JCheckBox("Predicci\u00F3n climatica");
-		chckbxPrediccinClimatica.setBounds(103, 243, 146, 23);
-		panel.add(chckbxPrediccinClimatica);
+		JCheckBox checkClima = new JCheckBox("Predicci\u00F3n climatica");
+		checkClima.setBounds(103, 286, 146, 23);
+		panel.add(checkClima);
 		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("Precios insumos");
-		chckbxNewCheckBox.setBounds(103, 269, 146, 23);
-		panel.add(chckbxNewCheckBox);
+		JCheckBox checkPrecios = new JCheckBox("Precios insumos");
+		checkPrecios.setBounds(103, 312, 146, 23);
+		panel.add(checkPrecios);
 		
-		JCheckBox chckbxNewCheckBox_1 = new JCheckBox("Expectativas precios");
-		chckbxNewCheckBox_1.setBounds(103, 295, 162, 23);
-		panel.add(chckbxNewCheckBox_1);
+		JCheckBox checkExpectativas = new JCheckBox("Expectativas precios");
+		checkExpectativas.setBounds(103, 338, 162, 23);
+		panel.add(checkExpectativas);
 		
-		JButton btnRegistrarse = new JButton("Registrarse");
-		btnRegistrarse.setBounds(103, 190, 111, 34);
+		btnRegistrarse = new JButton("Registrarse");
+		btnRegistrarse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String ip = txtIp.getText();
+				String ubic = txtUb.getText();
+				String tipo = txtProd.getText();
+				String tam = comboTam.getSelectedItem().toString();
+				
+				client.realizarConexion(ip, ubic, tipo, tam);
+			}
+		});
+		btnRegistrarse.setBounds(103, 233, 111, 34);
 		panel.add(btnRegistrarse);
 		
-		JButton btnSuscribirse = new JButton("Suscribirse");
-		btnSuscribirse.setBounds(103, 342, 106, 34);
+		btnSuscribirse = new JButton("Suscribirse");
+		btnSuscribirse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				List<String> temas = new ArrayList<String>();
+				if( checkClima.isSelected() ) {
+					temas.add("clima");
+				}
+				if( checkPrecios.isSelected() ) {
+					temas.add("precio");
+				}
+				if( checkExpectativas.isSelected() ) {
+					temas.add("expectativa");
+				}
+				
+				client.suscripciones(temas);
+			}
+		});
+		btnSuscribirse.setBounds(103, 385, 106, 34);
 		panel.add(btnSuscribirse);
 		
-		JScrollPane scrollPane = new JScrollPane();
+		messagesPane = new JTextPane();
+		messagesPane.setEditable(false);
+		
+		JScrollPane scrollPane = new JScrollPane(messagesPane);
 		scrollPane.setBounds(275, 69, 217, 307);
 		panel.add(scrollPane);
+		
+		JLabel lblNewLabel_3 = new JLabel("Ip Servidor");
+		lblNewLabel_3.setBounds(20, 190, 59, 14);
+		panel.add(lblNewLabel_3);
+		
+		txtIp = new JTextField();
+		txtIp.setBounds(103, 187, 86, 20);
+		panel.add(txtIp);
+		txtIp.setColumns(10);
 	}
 	
 	public void agregarMensaje( String msj ) {
-		
+		String actual = messagesPane.getText();
+		actual += '\n';
+		actual += msj;
+		messagesPane.setText(actual);
 	}
 }

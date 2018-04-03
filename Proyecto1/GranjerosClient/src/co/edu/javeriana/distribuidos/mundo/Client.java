@@ -28,6 +28,7 @@ public class Client {
 			this.out = new DataOutputStream(socket.getOutputStream());
 			
 			out.writeUTF( ubicacion + "," + tipoProducto + "," + tam);
+			System.out.println("Envio mensaje");
 			data = in.readUTF();
 			if( data != null ) {
 				gui.agregarMensaje(data);
