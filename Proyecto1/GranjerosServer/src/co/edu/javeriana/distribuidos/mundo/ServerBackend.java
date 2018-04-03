@@ -1,20 +1,32 @@
 package co.edu.javeriana.distribuidos.mundo;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServerBackend {
-	private List<Usuario> usuarios;
-	private List< Tema > temas;
+	private List<User> usuarios;
+	private List< Topic > temas;
 	
 	public ServerBackend( ) {
-		usuarios = new ArrayList<Usuario>();
-		temas = new ArrayList< Tema >();
+		usuarios = new ArrayList<User>();
+		temas = new ArrayList< Topic >();
+		this.poblarTemas();
+	}
+	
+	public void poblarTemas( ) {
+		Topic clima = new Topic("clima");
+		Topic precio = new Topic("precio");
+		Topic expectativa = new Topic("expectativa");
+		
+		this.temas.add(clima);
+		this.temas.add(precio);
+		this.temas.add(expectativa);
 	}
 	
 	public boolean existeTema( String nombre ) {
 		boolean flag = false;
-		for( Tema t : temas ) {
+		for( Topic t : temas ) {
 			if( t.getNombre().equals(nombre) ) {
 				flag = true;
 			}
@@ -29,24 +41,24 @@ public class ServerBackend {
 			flag = false;
 		}
 		else {
-			Tema t = new Tema( nombre );
+			Topic t = new Topic( nombre );
 			temas.add(t);
 		}
 		
 		return flag;
 	}
 	
-	public boolean anadirUsuario( String userName, String ip, String ubicacion, String tipoProducto, String tam ) {
+	public boolean anadirUsuario( String ip, String ubicacion, String tipoProducto, String tam ) {
 		boolean flag = true;
 		
-		for( Usuario user : usuarios ) {
-			if( user.getUsername().equals(userName) ) {
+		for( User user : usuarios ) {
+			if( user.getIp().equals(ip) ) {
 				flag = false;
 			}
 		}
 		
 		if( flag == true ) {
-			Usuario user = new Usuario( userName, ip, ubicacion, tipoProducto, tam, true );
+			User user = new User( ip, ubicacion, tipoProducto, tam, true );
 			usuarios.add(user);
 		}
 		
@@ -57,7 +69,7 @@ public class ServerBackend {
 		String[] args = cadena.split("|");
 		boolean flag = false;
 		
-		for( Tema t : temas ) {
+		for( Topic t : temas ) {
 			if( args[0].equals(t.getNombre()) ) {
 				t.agregarNoticia(args[1], args[2], args[3]);
 				flag = true;
@@ -71,20 +83,66 @@ public class ServerBackend {
 			return "error";
 		}
 	}
+	
+	public List<String> obtenerNoticiasParaUsuario( String ip ) {
+		List<String> news = new ArrayList<String>();
+		
+		for( Topic t : temas ) {
+			if( t.estaSuscrito(ip) ) {
+				List<News> ns = t.getNoticias();
+				
+				for( News n : ns ) {
+					String time = LocalTime.now().toString();
+					if( time.startsWith(n.getId()) ) {
+						news.add( n.getContenido() );
+					}
+				}
+			}
+		}
+		
+		return news;
+	}
+	
+	public User buscarUsuario( String ip ) {
+		User user = null;
+		for( User u : usuarios ) {
+			if( u.getIp().equals(ip) ) {
+				user = u;
+			}
+		}
+		
+		return user;
+	}
+	
+	public int suscribir( String[] tems, User user ) {
+		int cont = 0;
+		for( String s : tems ) {
+			for( Topic t : temas ) {
+				if( s.equals(t.getNombre()) ) {
+					boolean susc = t.suscribir(user);
+					if( susc == true ) {
+						cont++;
+					}
+				}
+			}
+		}
+		
+		return cont;
+	}
 
-	public List<Usuario> getUsuarios() {
+	public List<User> getUsuarios() {
 		return usuarios;
 	}
 
-	public void setUsuarios(List<Usuario> usuarios) {
+	public void setUsuarios(List<User> usuarios) {
 		this.usuarios = usuarios;
 	}
 
-	public List<Tema> getTemas() {
+	public List<Topic> getTemas() {
 		return temas;
 	}
 
-	public void setTemas(List<Tema> temas) {
+	public void setTemas(List<Topic> temas) {
 		this.temas = temas;
 	}
 }

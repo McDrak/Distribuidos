@@ -3,21 +3,21 @@ package co.edu.javeriana.distribuidos.mundo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tema {
+public class Topic {
 	private String nombre;
-	private List<Usuario> suscritos;
-	private List<Noticia> noticias;
+	private List<User> suscritos;
+	private List<News> noticias;
 	
-	public Tema( String nombreP ) {
+	public Topic( String nombreP ) {
 		this.nombre = nombreP;
-		this.suscritos = new ArrayList<Usuario>();
-		this.noticias = new ArrayList<Noticia>();
+		this.suscritos = new ArrayList<User>();
+		this.noticias = new ArrayList<News>();
 	}
 	
-	public boolean estaSuscrito( String username ) {
+	public boolean estaSuscrito( String ip ) {
 		boolean flag = false;
-		for( Usuario user : suscritos ) {
-			if( user.getUsername().equals(username) ) {
+		for( User user : suscritos ) {
+			if( user.getIp().equals(ip) ) {
 				flag = true;
 			}
 		}
@@ -25,9 +25,9 @@ public class Tema {
 		return flag;
 	}
 	
-	public boolean suscribir( Usuario user ) {
+	public boolean suscribir( User user ) {
 		boolean flag = true;
-		if( this.estaSuscrito(user.getUsername()) == true ) {
+		if( this.estaSuscrito(user.getIp()) == true ) {
 			flag = false;
 		}
 		else {
@@ -38,7 +38,7 @@ public class Tema {
 	}
 	
 	public void agregarNoticia( String id, String contenido, String fuente ) {
-		Noticia n = new Noticia(id, contenido, fuente);
+		News n = new News(id, contenido, fuente);
 		this.noticias.add( n );
 	}
 
@@ -50,19 +50,19 @@ public class Tema {
 		this.nombre = nombre;
 	}
 
-	public List<Usuario> getSuscritos() {
+	public List<User> getSuscritos() {
 		return suscritos;
 	}
 
-	public void setSuscritos(List<Usuario> suscritos) {
+	public void setSuscritos(List<User> suscritos) {
 		this.suscritos = suscritos;
 	}
 
-	public List<Noticia> getNoticias() {
+	public List<News> getNoticias() {
 		return noticias;
 	}
 
-	public void setNoticias(List<Noticia> noticias) {
+	public void setNoticias(List<News> noticias) {
 		this.noticias = noticias;
 	}
 }

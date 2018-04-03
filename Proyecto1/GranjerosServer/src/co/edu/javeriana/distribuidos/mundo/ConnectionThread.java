@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 
 public class ConnectionThread extends Thread {
 	private ServerBackend server;
@@ -29,17 +30,39 @@ public class ConnectionThread extends Thread {
 			data = in.readUTF();
 			String[] sepData = data.split(",");
 			if( sepData.length == 4 ) {
-				boolean entra = server.anadirUsuario(sepData[0], sepData[1], sepData[2], sepData[3], sepData[4]);
+				boolean entra = server.anadirUsuario(sepData[0], sepData[1], sepData[2], sepData[3] );
 				
 				if( entra == true ) {
+					String ip = sepData[0];
 					out.writeUTF("aproved");
+					System.out.println("Entra usuario " + ip);
+					data = in.readUTF();
+					sepData = data.split(",");
+					int nts = server.suscribir(sepData, server.buscarUsuario(ip));
+					out.writeUTF("suscrito a " + nts + " temas.");
+					
+					while( true ) {
+						List<String> ns = server.obtenerNoticiasParaUsuario(ip);
+						for( String s : ns ) {
+							out.writeUTF(s);
+						}
+						
+						try {
+							sleep(30000);
+						} 
+						catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
 				}
 				else {
-					out.writeUTF("error");
+					out.writeUTF("error: no se pudo crear usuario");
+					this.clientSocket.close();
 				}
 			}
 			else {
-				//TODO: Rechazo por falta de argumentos
+				out.writeUTF("error: numero de argumentos");
+				this.clientSocket.close();
 			}
 		} 
 		catch (IOException e) {

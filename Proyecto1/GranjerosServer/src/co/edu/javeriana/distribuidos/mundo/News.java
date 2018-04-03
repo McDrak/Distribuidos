@@ -1,11 +1,11 @@
 package co.edu.javeriana.distribuidos.mundo;
 
-public class Noticia {
+public class News {
 	private String id;
 	private String contenido;
 	private String fuente;
 	
-	public Noticia( String idP, String contenidoP, String fuenteP ) {
+	public News( String idP, String contenidoP, String fuenteP ) {
 		this.id = idP;
 		this.contenido = contenidoP;
 		this.fuente = fuenteP;

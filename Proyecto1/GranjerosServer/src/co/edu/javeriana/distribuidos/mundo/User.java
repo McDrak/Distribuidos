@@ -1,28 +1,18 @@
 package co.edu.javeriana.distribuidos.mundo;
 
-public class Usuario {
-	private String username;
+public class User {
 	private String ip;
 	private String ubicacion;
 	private String tipoProducto;
 	private String tamano;
 	private boolean online;
 	
-	public Usuario( String usernameP, String ipP, String ubiacionP, String tipoProductoP, String tamanoP, boolean onlineP ) {
-		this.username = usernameP;
+	public User( String ipP, String ubiacionP, String tipoProductoP, String tamanoP, boolean onlineP ) {
 		this.ip = ipP;
 		this.ubicacion = ubiacionP;
 		this.tipoProducto = tipoProductoP;
 		this.tamano = tamanoP;
 		this.online = onlineP;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public String getIp() {
