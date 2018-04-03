@@ -51,31 +51,37 @@ public class Server {
 				Scanner scan = new Scanner( System.in );
 				String nArch = null;
 				List<String> content = null;
+				boolean flag = true;
 				
-				while( true ) {
-					try {
+				try {
+					while( flag == true ) {
 						System.out.println("Agrega un archivo de noticias:");
-						nArch = scan.nextLine();
-						content = Files.readAllLines(Paths.get(nArch), StandardCharsets.UTF_8);
-						System.out.println("Se ha agregado un nuevo archivo de noticias.");
-						
-						for( String s : content ) {
-							backend.agregarNoticia(s);
+						nArch = scan.next();
+						if( nArch.equals("exit") != true ) {
+							content = Files.readAllLines(Paths.get(nArch), StandardCharsets.UTF_8);
+							System.out.println("Se ha agregado un nuevo archivo de noticias.");
+							
+							for( String s : content ) {
+								backend.agregarNoticia(s);
+							}
+							
+							System.out.println("Finalizo la carga del archivo.");
 						}
-						
-						System.out.println("Finalizo la carga del archivo.");
+						else {
+							flag = false;
+							System.out.println("Se ha detenido el cargador de Archivos.");
+						}
 					}
-					catch (FileNotFoundException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					finally {
-						scan.close();
-					}
+				}
+				catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				finally {
+					scan.close();
 				}
 			}
 		}).start();
 	}
-
 }

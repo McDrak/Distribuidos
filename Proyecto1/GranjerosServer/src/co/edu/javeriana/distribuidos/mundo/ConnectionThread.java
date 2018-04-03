@@ -29,8 +29,8 @@ public class ConnectionThread extends Thread {
 		try {
 			data = in.readUTF();
 			String[] sepData = data.split(",");
-			if( sepData.length == 4 ) {
-				boolean entra = server.anadirUsuario(sepData[0], sepData[1], sepData[2], sepData[3] );
+			if( sepData.length == 3 ) {
+				boolean entra = server.anadirUsuario( clientSocket.getInetAddress().toString(), sepData[0], sepData[1], sepData[2] );
 				
 				if( entra == true ) {
 					String ip = sepData[0];
