@@ -37,6 +37,18 @@ public class Topic {
 		return flag;
 	}
 	
+	public boolean desSuscribir( User user ) {
+		boolean flag = true;
+		if( this.estaSuscrito(user.getIp()) == true ) {
+			flag = false;
+		}
+		else {
+			this.suscritos.remove(user);
+		}
+		
+		return flag;
+	}
+	
 	public void agregarNoticia( String id, String contenido, String fuente ) {
 		News n = new News(id, contenido, fuente);
 		this.noticias.add( n );

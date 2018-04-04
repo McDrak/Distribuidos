@@ -59,7 +59,7 @@ public class Server {
 						nArch = scan.next();
 						if( nArch.equals("exit") != true ) {
 							content = Files.readAllLines(Paths.get(nArch), StandardCharsets.UTF_8);
-							System.out.println("Se ha agregado un nuevo archivo de noticias.");
+							System.out.println("Inicia carga del archivo.");
 							
 							for( String s : content ) {
 								backend.agregarNoticia(s);

@@ -134,6 +134,16 @@ public class ServerBackend {
 		
 		return cont;
 	}
+	
+	public void desconectarUsuario( String ip ) {
+		User u = buscarUsuario(ip);
+		if( u != null ) {
+			usuarios.remove(u);
+			for( Topic t : temas ) {
+				t.desSuscribir(u);
+			}
+		}
+	}
 
 	public List<User> getUsuarios() {
 		return usuarios;

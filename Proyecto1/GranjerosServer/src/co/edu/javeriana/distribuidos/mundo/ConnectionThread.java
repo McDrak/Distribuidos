@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.time.LocalTime;
 import java.util.List;
 
 public class ConnectionThread extends Thread {
@@ -26,11 +27,12 @@ public class ConnectionThread extends Thread {
 	
 	public void run( ) {
 		String data = null;
+		String ip = null;
 		try {
 			data = in.readUTF();
 			String[] sepData = data.split(",");
 			if( sepData.length == 3 ) {
-				String ip = clientSocket.getInetAddress().toString();
+				ip = clientSocket.getInetAddress().toString();
 				boolean entra = server.anadirUsuario( ip, sepData[0], sepData[1], sepData[2] );
 				
 				if( entra == true ) {
@@ -46,10 +48,11 @@ public class ConnectionThread extends Thread {
 						List<String> ns = server.obtenerNoticiasParaUsuario(ip);
 						for( String s : ns ) {
 							out.writeUTF(s);
+							System.out.println(LocalTime.now() + ": Se envio noticia " + ip);
 						}
 						
 						try {
-							sleep(10000);
+							sleep(60000);
 						} 
 						catch (InterruptedException e) {
 							e.printStackTrace();
@@ -67,7 +70,8 @@ public class ConnectionThread extends Thread {
 			}
 		} 
 		catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("El cliente " + ip + " se ha desconectado.");
+			server.desconectarUsuario(ip);
 		}
 	}
 }
