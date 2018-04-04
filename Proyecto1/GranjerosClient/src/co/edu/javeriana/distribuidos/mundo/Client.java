@@ -67,7 +67,6 @@ public class Client {
 			
 			if( data != null ) {
 				gui.agregarMensaje(data);
-				this.recibirNoticias();
 			}
 		} 
 		catch (IOException e) {
@@ -76,24 +75,19 @@ public class Client {
 	}
 	
 	public void recibirNoticias( ) {
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				String data = null;
-				
-				try {
-					while( true ) {
-						data = in.readUTF();
-						if( data != null ) {
-							gui.agregarMensaje(data);
-						}
-						data = null;
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
+		String data = null;
+		
+		try {
+			while( true ) {
+				data = in.readUTF();
+				if( data != null ) {
+					gui.agregarMensaje(data);
 				}
+				data = null;
 			}
-		}).start();
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

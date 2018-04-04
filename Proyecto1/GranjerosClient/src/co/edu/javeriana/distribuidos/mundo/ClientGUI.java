@@ -142,6 +142,7 @@ public class ClientGUI extends JFrame {
 				}
 				
 				client.suscripciones(temas);
+				iniciarRecepcion();
 			}
 		});
 		btnSuscribirse.setBounds(103, 385, 106, 34);
@@ -162,6 +163,16 @@ public class ClientGUI extends JFrame {
 		txtIp.setBounds(103, 187, 86, 20);
 		panel.add(txtIp);
 		txtIp.setColumns(10);
+	}
+	
+	public void iniciarRecepcion() {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				client.recibirNoticias();
+			}
+		}).start();
 	}
 	
 	public void agregarMensaje( String msj ) {
