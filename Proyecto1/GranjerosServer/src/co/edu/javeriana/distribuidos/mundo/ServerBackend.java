@@ -66,12 +66,17 @@ public class ServerBackend {
 	}
 	
 	public String agregarNoticia( String cadena ) {
-		String[] args = cadena.split("|");
+		String[] args = cadena.split("%");
+		String nombre = args[0];
+		String id = args[1];
+		String cont = args[2];
+		String fuente = args[3];
+		
 		boolean flag = false;
 		
 		for( Topic t : temas ) {
-			if( args[0].equals(t.getNombre()) ) {
-				t.agregarNoticia(args[1], args[2], args[3]);
+			if( nombre.equals(t.getNombre()) ) {
+				t.agregarNoticia(id, cont, fuente);
 				flag = true;
 			}
 		}

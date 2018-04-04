@@ -30,16 +30,17 @@ public class ConnectionThread extends Thread {
 			data = in.readUTF();
 			String[] sepData = data.split(",");
 			if( sepData.length == 3 ) {
-				boolean entra = server.anadirUsuario( clientSocket.getInetAddress().toString(), sepData[0], sepData[1], sepData[2] );
+				String ip = clientSocket.getInetAddress().toString();
+				boolean entra = server.anadirUsuario( ip, sepData[0], sepData[1], sepData[2] );
 				
 				if( entra == true ) {
-					String ip = sepData[0];
 					out.writeUTF("aproved");
 					System.out.println("Entra usuario " + ip);
 					data = in.readUTF();
 					sepData = data.split(",");
 					int nts = server.suscribir(sepData, server.buscarUsuario(ip));
 					out.writeUTF("suscrito a " + nts + " temas.");
+					System.out.println(ip + " suscrito a " + nts + " temas.");
 					
 					while( true ) {
 						List<String> ns = server.obtenerNoticiasParaUsuario(ip);
@@ -48,7 +49,7 @@ public class ConnectionThread extends Thread {
 						}
 						
 						try {
-							sleep(30000);
+							sleep(10000);
 						} 
 						catch (InterruptedException e) {
 							e.printStackTrace();

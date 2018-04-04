@@ -1,6 +1,6 @@
-clima|14:00|El clima sera de 20°|eltiempo.com
-precio|14:00|Las manzanas suben a 3000 COP|eltiempo.com
-expectativa|14:00|Se espera que baje la papa 300 COP|eltiempo.com
-clima|14:01|qwerd|eltiempo.com
-precio|14:02|asdf|eltiempo.com
-expectativa|14:03|zxcv|eltiempo.com
+clima%19:36%El clima sera de 20 grados%eltiempo.com
+precio%14:00%Las manzanas suben a 3000 COP%eltiempo.com
+expectativa%14:00%Se espera que baje la papa 300 COP%eltiempo.com
+clima%14:01%qwerd%eltiempo.com
+precio%14:02%asdf%eltiempo.com
+expectativa%14:03%zxcv%eltiempo.com

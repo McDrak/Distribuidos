@@ -67,6 +67,7 @@ public class Client {
 			
 			if( data != null ) {
 				gui.agregarMensaje(data);
+				this.recibirNoticias();
 			}
 		} 
 		catch (IOException e) {
