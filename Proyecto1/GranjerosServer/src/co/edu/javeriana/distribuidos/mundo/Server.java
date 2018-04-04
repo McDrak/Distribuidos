@@ -11,10 +11,12 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Server {
+	private ServerBackend backend;
+	private int serverPort;
 
 	public static void main(String[] args) {
-		int serverPort = 7896;
-		ServerBackend backend = new ServerBackend();
+		serverPort = 7896;
+		backend = new ServerBackend();
 		System.out.println("AgroConsejero Server :D");
 		
 		new Thread(new Runnable() {
