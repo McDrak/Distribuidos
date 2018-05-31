@@ -1,6 +1,13 @@
+import java.io.Serializable;
 import java.util.Date;
 
-public class Transaction {
+public class Transaction implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public enum TIPO_TRANSACCION {
 		RETIRO, DEPOSITO, CREACION, CIERRE, CONSULTA, PAGO, LISTA
 	};

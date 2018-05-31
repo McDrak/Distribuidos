@@ -14,16 +14,17 @@ public class RemoteCardsImpl extends UnicastRemoteObject implements RemoteCards{
 	}
 
 	@Override
-	public double mastercardPayment(String name, String password, double amount) throws RemoteException {
+	public boolean mastercardPayment(String name, String password, double amount) throws RemoteException {
 		Account a = this.server.verifyAccount(name, password);
 		double balance = 0;
+		boolean flag = true;
 		
 		if( a != null ) {
 			synchronized( a ) {
 				balance = a.getBalance();
 				
 				if( balance < amount ) {
-					System.out.println("No hay suficientes fondos.");
+					flag = false;
 				}
 				else {
 					balance -= amount;
@@ -32,21 +33,25 @@ public class RemoteCardsImpl extends UnicastRemoteObject implements RemoteCards{
 				}
 			}
 		}
+		else {
+			flag = false;
+		}
 		
-		return balance;
+		return flag;
 	}
 
 	@Override
-	public double visaPayment(String name, String password, double amount) throws RemoteException {
+	public boolean visaPayment(String name, String password, double amount) throws RemoteException {
 		Account a = this.server.verifyAccount(name, password);
 		double balance = 0;
+		boolean flag = true;
 		
 		if( a != null ) {
 			synchronized( a ) {
 				balance = a.getBalance();
 				
 				if( balance < amount ) {
-					System.out.println("No hay suficientes fondos.");
+					flag = false;
 				}
 				else {
 					balance -= amount;
@@ -55,7 +60,10 @@ public class RemoteCardsImpl extends UnicastRemoteObject implements RemoteCards{
 				}
 			}
 		}
+		else {
+			flag = false;
+		}
 		
-		return balance;
+		return flag;
 	}
 }

@@ -13,6 +13,17 @@ public class RemoteTransfersImpl extends UnicastRemoteObject implements RemoteTr
 	}
 	
 	@Override
+	public synchronized boolean checkAccount(String name, String password) throws RemoteException {
+		boolean flag = true;
+		
+		if( this.server.verifyAccount(name, password) == null ) {
+			flag = false;
+		}
+		
+		return flag;
+	}
+	
+	@Override
 	public synchronized boolean openAccount(String name, String password) throws RemoteException {
 		boolean flag = true;
 		
@@ -21,8 +32,11 @@ public class RemoteTransfersImpl extends UnicastRemoteObject implements RemoteTr
 		}
 		else {
 			Account a = new Account( password );
+			Account c = new Account( password );
 			a.addTransaction("CRE", 0);
-			this.server.addAccount( name, a );
+			c.addTransaction("CRE", 0);
+			this.server.addAccount( name + "a", a );
+			this.server.addAccount(name + "c", c);
 			System.out.println("Hola " + name);
 		}
 		
@@ -30,25 +44,31 @@ public class RemoteTransfersImpl extends UnicastRemoteObject implements RemoteTr
 	}
 
 	@Override
-	public synchronized double closeAccount(String name, String password) throws RemoteException {
+	public synchronized boolean closeAccount(String name, String password) throws RemoteException {
 		Account a = this.server.verifyAccount(name, password);
 		double balance = 0;
+		boolean flag = true;
 		
 		if( a != null ) {
 			synchronized( a ) {
 				balance = a.getBalance();
 				a.setBalance(0);
 				a.addTransaction("C", balance);
+				this.server.deleteAccount(name);
 				this.server.addForQueue(name, a);
 			}
 		}
+		else {
+			flag = false;
+		}
 		
-		return balance;
+		return flag;
 	}
 
 	@Override
-	public synchronized void deposit(String name, String password, double amount) throws RemoteException {
-		Account a = this.server.verifyAccount(name, password);
+	public synchronized boolean deposit(String name, String password, double amount) throws RemoteException {
+		Account a = this.server.getSpecificAccount(name);
+		boolean flag = true;
 		
 		if( a != null ) {
 			synchronized( a ) {
@@ -57,19 +77,25 @@ public class RemoteTransfersImpl extends UnicastRemoteObject implements RemoteTr
 				this.server.addForQueue(name, a);
 			}
 		}
+		else {
+			flag = false;
+		}
+		
+		return flag;
 	}
 
 	@Override
-	public synchronized double withdraw(String name, String password, double amount) throws RemoteException {
+	public synchronized boolean withdraw(String name, String password, double amount) throws RemoteException {
 		Account a = this.server.verifyAccount(name, password);
 		double balance = 0;
+		boolean flag = true;
 		
 		if( a != null ) {
 			synchronized( a ) {
 				balance = a.getBalance();
 				
 				if( balance < amount ) {
-					System.out.println("Fondos no suficientes");
+					flag = false;
 				}
 				else {
 					a.setBalance(balance - amount);
@@ -79,7 +105,10 @@ public class RemoteTransfersImpl extends UnicastRemoteObject implements RemoteTr
 				}
 			}
 		}
+		else {
+			flag = false;
+		}
 		
-		return balance;
+		return flag;
 	}
 }

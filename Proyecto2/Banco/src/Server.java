@@ -25,6 +25,14 @@ public class Server {
 		return a;
 	}
 	
+	public Account getSpecificAccount( String name ) {
+		return this.accounts.get(name);
+	}
+	
+	public void deleteAccount( String name ) {
+		this.accounts.remove(name);
+	}
+	
 	public void addAccount( String name, Account a ) {
 		this.accounts.put(name, a);
 	}
@@ -62,6 +70,7 @@ public class Server {
 
 	public static void main(String[] args) {
 		Server server = new Server( );
+		
 		try {
 			LocateRegistry.createRegistry(5000);
 			RemoteCards iCards = new RemoteCardsImpl(server);
